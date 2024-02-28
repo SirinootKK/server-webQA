@@ -22,6 +22,7 @@ class WebQA:
             self.set_model(model)
             self.set_tokenizer(tokenizer)
             self.set_embedding_model(embedding_model_name)
+            self.set_url(url)
             self.load_context(url)
             self.set_index(self.prepare_sentences_vector(self.get_embeddings(self.embedding_model)))
         
@@ -31,6 +32,9 @@ class WebQA:
     def set_tokenizer(self, tokenizer):
         self.tokenizer = AutoTokenizer.from_pretrained(tokenizer)
         
+    def set_url(self, url):
+        self.url = url
+        
     def set_embedding_model(self, model):
         self.embedding_model = SentenceTransformer(model)
 
@@ -38,7 +42,6 @@ class WebQA:
         elements = partition_html(url=url)
         context = [str(element) for element in elements if len(str(element)) > 60]
         self.context = context
-        print('Load context done')
 
     def set_index(self):
         vector = self.get_embeddings(self.context)
@@ -84,5 +87,5 @@ class WebQA:
         return most_similar_contexts
     
     def chat_interface(self, question):
-        response = self.predict_test(self.set_embedding_model, context, question, index, url)
+        response = self.predict_test(self.set_embedding_model, self.context, question, self.index, self.url)
         return response
