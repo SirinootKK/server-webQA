@@ -18,13 +18,14 @@ class WebQA:
         self.index = None
         self.url = None
         
-        if all(arg is not None for arg in (model, tokenizer, embedding_model_name,url)):
+        if all(arg is not None for arg in (model, tokenizer, embedding_model_name, url)):
             self.set_model(model)
             self.set_tokenizer(tokenizer)
             self.set_embedding_model(embedding_model_name)
             self.set_url(url)
             self.load_context(url)
-            self.set_index(self.prepare_sentences_vector(self.get_embeddings(self.embedding_model)))
+            self.set_index()
+
         
     def set_model(self, model):
         self.model = AutoModelForQuestionAnswering.from_pretrained(model)
@@ -87,5 +88,5 @@ class WebQA:
         return most_similar_contexts
     
     def chat_interface(self, question):
-        response = self.predict_test(self.set_embedding_model, self.context, question, self.index, self.url)
+        response = self.predict_test(self.context, question, self.index, self.url)
         return response

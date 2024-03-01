@@ -9,8 +9,8 @@ sentenceEmbeddingModel='intfloat/multilingual-e5-base'
 
 webqa = WebQA(model=model_path, tokenizer=model_path, embedding_model_name=sentenceEmbeddingModel, url = url_path)
 
-@WebQA_blueprint.route('/api/get_semantic_wc', methods=['POST'])
-def get_semantic_wc():
+@WebQA_blueprint.route('/api/webqa', methods=['POST'])
+def get_webqa():
     data = request.get_json()
     user_message = data['message']
 
