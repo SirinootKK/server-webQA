@@ -10,7 +10,7 @@ from unstructured.partition.html import partition_html
 
 class WebQA:
     
-    def __init__(self, model=None, tokenizer=None, embedding_model_name=None, url=None,):
+    def __init__(self, model=None, tokenizer=None, embedding_model_name=None, url=None):
         self.model = None
         self.tokenizer = None
         self.embedding_model = None
@@ -26,7 +26,6 @@ class WebQA:
             self.load_context(url)
             self.set_index()
 
-        
     def set_model(self, model):
         self.model = AutoModelForQuestionAnswering.from_pretrained(model)
 
@@ -80,11 +79,11 @@ class WebQA:
         question_vector = self.prepare_sentences_vector(question_vector)
         _, indices = self.faiss_search(index, question_vector, 3)
 
-        most_similar_contexts = ''
+        most_similar_contexts = []
         for i in range(3):
             most_sim_context = context[indices[0][i]].strip()
             answer_url = f"{url}#:~:text={most_sim_context}"
-            most_similar_contexts += f'<a href="{answer_url}">[ {i+1} ]: {most_sim_context}</a>\n\n'
+            most_similar_contexts.append({'url': answer_url, 'text': most_sim_context})
         return most_similar_contexts
     
     def chat_interface(self, question):
